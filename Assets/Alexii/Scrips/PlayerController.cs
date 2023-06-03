@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            currentGravity = Mathf.Lerp(currentGravity, maxGravity, gravityLerp * Time.deltaTime);
+            currentGravity = maxGravity; /*Mathf.Lerp(currentGravity, maxGravity, gravityLerp * Time.deltaTime);*/
             rb.drag = 0;
         }
     }
@@ -118,7 +118,6 @@ public class PlayerController : MonoBehaviour
         }
         Jump();
         if (!isGrounded) { jumpForce -= currentGravity * Time.deltaTime; }
-        else { jumpForce = 0; }
         rb.velocity += new Vector3(0, jumpForce, 0);
     }
     void Sprint()

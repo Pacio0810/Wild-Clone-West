@@ -26,19 +26,23 @@ public class newPlayerScripts : MonoBehaviour
     private float? lastGroundedTime;
     private float? jumpButtonPressedTime;
     private bool isJumping;
-    private bool isGrounded;
     [SerializeField] private float speed = 500;
+    [SerializeField] private float _currentSpeed;
     [SerializeField] private float sensivity;
     private float YawCamera;
     private float pitchCamera;
     [SerializeField] private float minPitch;
     [SerializeField] private float maxPitch;
+    [SerializeField] private bool IsGrounded;
+    [SerializeField] private LayerMask groundMask;
+
 
     void Start()
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         originalStepOffset = characterController.stepOffset;
+        _currentSpeed = speed;
     }
 
     void Update()
@@ -56,7 +60,7 @@ public class newPlayerScripts : MonoBehaviour
             inputMagnitude = 2;
         }
 
-        animator.SetFloat("speed", inputMagnitude, 0.1f, Time.deltaTime);
+       
 
         movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
         movementDirection.Normalize();
@@ -78,7 +82,7 @@ public class newPlayerScripts : MonoBehaviour
             characterController.stepOffset = originalStepOffset;
             ySpeed = -0.5f;
             animator.SetBool("IsGrounded", true);
-            isGrounded = true;
+            IsGrounded = true;
             animator.SetBool("IsJumping", false);
             isJumping = false;
             animator.SetBool("FreeFalling", false);
@@ -96,7 +100,7 @@ public class newPlayerScripts : MonoBehaviour
         {
             characterController.stepOffset = 0;
             animator.SetBool("IsGrounded", false);
-            isGrounded = false;
+            IsGrounded = false;
 
             if ((isJumping && ySpeed < 0) || ySpeed < -2)
             {
@@ -104,9 +108,8 @@ public class newPlayerScripts : MonoBehaviour
             }
         }
 
-        Vector3 velocity = movementDirection * speed;
+        Vector3 velocity = movementDirection * _currentSpeed * inputMagnitude;
         velocity.y = ySpeed;
-
         characterController.Move(velocity * Time.deltaTime);
 
         if (movementDirection != Vector3.zero)
@@ -116,19 +119,25 @@ public class newPlayerScripts : MonoBehaviour
             Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            _currentSpeed = speed;
+            animator.SetFloat("speed", inputMagnitude, 0.1f, Time.deltaTime);
         }
         else
         {
             animator.SetBool("IsMoving", false);
+            animator.SetFloat("speed", 0, 0.1f, Time.deltaTime);
+            _currentSpeed = 0;
         }
 
-        if (isGrounded == false)
+        if (IsGrounded == false)
         {
             Vector3 velocity2 = movementDirection * inputMagnitude * jumpHorizontalSpeed;
             velocity2.y = ySpeed;
 
             characterController.Move(velocity2 * Time.deltaTime);
         }
+
+       // CheckGround();
     }
 
     private void OnAnimatorMove()
@@ -161,5 +170,15 @@ public class newPlayerScripts : MonoBehaviour
         pitchCamera = Mathf.Clamp(pitchCamera, minPitch, maxPitch);
 
         cameraTransform.rotation = Quaternion.Euler(pitchCamera, YawCamera, 0);
+    }
+
+    void CheckGround()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f, groundMask))
+        {
+            IsGrounded = true;
+        }
+        else { IsGrounded = false;}
     }
 }
