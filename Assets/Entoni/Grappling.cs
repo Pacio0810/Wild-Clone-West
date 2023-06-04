@@ -2,74 +2,109 @@ using UnityEngine;
 
 public class Grappling : MonoBehaviour
 {
-    public Vector3 lastGrappled;
-    public LayerMask grappable;
+    [Header("Ref")]
+    private PlayerController player;
+    public Transform cam;
+    public Transform gunTip;
+
+    private Vector3 lastGrapplePoint;
+
+    [Header("Cooldown")]
+    public float grapplingCd;
+    private float grapplingCdTimer;
+
+    [Header("Grappling")]
+    public float distance;
+    public float grappleDelayTime;
+    public float trajectory;
+    public LayerMask grapplableMask;
     public LineRenderer cable;
-    public float maxDistanceGrapple;
-    public bool IsGrappling;
-    private PlayerController playerController;
-    // Start is called before the first frame update
-    void Start()
+    private bool grappling;
+
+    [Header("Input")]
+    KeyCode grappleKey = KeyCode.E;
+
+    private void Start()
     {
-        cable = GetComponent<LineRenderer>();
+        player = GetComponent<PlayerController>();
         cable.enabled = false;
-        playerController = GetComponent<PlayerController>();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(grappleKey))
         {
-            ShootRay();
+            StartGrapple();
         }
+
+        if (grapplingCdTimer > 0)
+            grapplingCdTimer -= Time.deltaTime;
     }
+
     private void LateUpdate()
     {
-        if (IsGrappling)
+        if (grappling)
         {
-            cable.SetPosition(0, transform.position);
+            cable.SetPosition(0, gunTip.position);
         }
     }
-    void ShootRay()
+
+    private void StartGrapple()
     {
-        RaycastHit hit;
-        Vector3 camerafr = Camera.main.transform.forward;
-        if (Physics.Raycast(transform.position, camerafr, out hit, maxDistanceGrapple, grappable))
+        if (grapplingCdTimer > 0)
         {
-            lastGrappled = hit.point;
-            StartGrappling();
-            Debug.DrawRay(transform.position, camerafr * maxDistanceGrapple, Color.red, 4f);
+            return;
+        }
+        grappling = true;
+        RaycastHit hit;
+        cable.enabled = true;
+        if (Physics.Raycast(gunTip.position, cam.forward, out hit, distance, grapplableMask))
+        {
+            lastGrapplePoint = hit.point;
+            Debug.DrawRay(gunTip.position, cam.forward * distance, Color.red);
+
+            Invoke(nameof(ExecuteGrapple), grappleDelayTime);
         }
         else
         {
-            IsGrappling = false;
+            lastGrapplePoint = gunTip.position + cam.forward * distance;
+
+            Invoke(nameof(StopGrapple), grappleDelayTime);
+            player.isGrappling = false;
         }
-
-    }
-    void StartGrappling()
-    {
-        cable.enabled = true;
-        cable.SetPosition(1, lastGrappled);
-        IsGrappling = true;
-        JumpToPos(lastGrappled, 30f);
+        cable.SetPosition(1, lastGrapplePoint);
     }
 
-    public Vector3 GrapplingJumpVelocity(Vector3 startPoint, Vector3 end, float trajectory)
+    private void ExecuteGrapple()
     {
-        float gravity = Physics.gravity.y;
-        float displacementY = end.y - startPoint.y;
-        Vector3 dispXY = new Vector3(end.x - startPoint.x, 0f, end.z - startPoint.z);
+        Vector3 lowestPoint = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectory);
+        float grapplePointRelativeYPos = lastGrapplePoint.y - lowestPoint.y;
+        float highestPointOnArc = grapplePointRelativeYPos + trajectory;
 
-        Vector3 velocityXZ = dispXY / (Mathf.Sqrt(-2 * trajectory / gravity) + Mathf.Sqrt(2 * (displacementY - trajectory) / gravity));
+        if (grapplePointRelativeYPos < 0) highestPointOnArc = trajectory;
 
-        return velocityXZ - velocityY;
+        //player.DirectJumpToPosition(lastGrapplePoint, highestPointOnArc);
+
+        Invoke(nameof(StopGrapple), 1f);
     }
-    void JumpToPos(Vector3 target, float trajetory)
+
+    public void StopGrapple()
     {
-        //Move with RigidBody not .Move
-        //player.characterController.Move(GrapplingJumpVelocity(transform.position, target, trajetory));
+        grappling = false;
+
+        grapplingCdTimer = grapplingCd;
+        cable.enabled = false;
+    }
+
+    public bool IsGrappling()
+    {
+        return grappling;
+    }
+
+    public Vector3 GetGrapplePoint()
+    {
+        return lastGrapplePoint;
     }
 }

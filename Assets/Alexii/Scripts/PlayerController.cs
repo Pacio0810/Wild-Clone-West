@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxPitch, minPitch;
     [SerializeField] private float sensivity;
 
+    public bool isGrappling;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -53,7 +55,7 @@ public class PlayerController : MonoBehaviour
     }
     void CheckGround()
     {
-        if (Physics.CheckSphere(transform.position, _checkRadius, _groundMaskCheck))
+        if (Physics.CheckSphere(transform.position, _checkRadius, _groundMaskCheck) && !isGrappling)
         {
             IsGrounded = true;
             _anim.SetBool(IsGroundedID, true);
@@ -85,6 +87,10 @@ public class PlayerController : MonoBehaviour
     }
     void Move()
     {
+        if (isGrappling)
+        {
+            return;
+        }
         sprintMultiply = InputSystem.self.Sprint ? 2 : 1;
 
         float side = InputSystem.self.LocalAxisMove.x;
@@ -97,7 +103,6 @@ public class PlayerController : MonoBehaviour
 
         if (direction != Vector3.zero)
         {
-
             _currentSpeed = Mathf.Lerp(_currentSpeed, _MaxWalkSpeed, _lerpSpeed * Time.deltaTime);
             _anim.SetBool(IsMovingID, true);
             _anim.SetFloat(Velocity, sprintMultiply, 0.3f, Time.deltaTime);
@@ -142,5 +147,18 @@ public class PlayerController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+    }
+
+    public Vector3 GrapplingJumpVelocity(Vector3 startPoint, Vector3 end, float trajectory)
+    {
+        float gravity = Physics.gravity.y;
+        float displacementY = end.y - startPoint.y;
+        Vector3 dispXY = new Vector3(end.x - startPoint.x, 0f, end.z - startPoint.z);
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectory);
+
+        Vector3 velocityXZ = dispXY / (Mathf.Sqrt(-2 * trajectory / gravity) + Mathf.Sqrt(2 * (displacementY - trajectory) / gravity));
+
+        return velocityXZ - velocityY;
     }
 }
