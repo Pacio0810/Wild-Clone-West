@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     [Header("Animation")]
     private Animator _anim;
     [SerializeField] private bool IsGrounded;
-    private int IsJumpingID, IsFallingID, IsMovingID, IsGroundedID;
+    private int IsJumpingID, IsFallingID, IsMovingID, IsGroundedID, Velocity, Side, Forward, IsArmed;
 
     [Header("Camera")]
     [SerializeField] private Transform _camera;
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
         Move();
         CheckGround();
         Jump();
+        EquipWeapon();
     }
     void Jump()
     {
@@ -76,32 +78,40 @@ public class PlayerController : MonoBehaviour
         IsFallingID = Animator.StringToHash("IsFalling");
         IsMovingID = Animator.StringToHash("IsMoving");
         IsGroundedID = Animator.StringToHash("IsGrounded");
+        Velocity = Animator.StringToHash("Velocity");
+        Side = Animator.StringToHash("Side");
+        Forward = Animator.StringToHash("Forward");
+        IsArmed = Animator.StringToHash("IsArmed");
     }
     void Move()
     {
+        sprintMultiply = InputSystem.self.Sprint ? 2 : 1;
+
         float side = InputSystem.self.LocalAxisMove.x;
         float forward = InputSystem.self.LocalAxisMove.y;
+        _anim.SetFloat(Side, side * sprintMultiply, 0.2f, Time.deltaTime);
+        _anim.SetFloat(Forward, forward * sprintMultiply, 0.2f, Time.deltaTime);
 
         Vector3 direction = side * _camera.right + forward * _camera.forward;
         direction.y = 0;
 
         if (direction != Vector3.zero)
         {
-            sprintMultiply = InputSystem.self.Sprint ? 2 : 1;
 
             _currentSpeed = Mathf.Lerp(_currentSpeed, _MaxWalkSpeed, _lerpSpeed * Time.deltaTime);
             _anim.SetBool(IsMovingID, true);
-            _anim.SetFloat("Velocity", sprintMultiply,0.3f,Time.deltaTime);
+            _anim.SetFloat(Velocity, sprintMultiply, 0.3f, Time.deltaTime);
+
+            float rot = !_anim.GetBool(IsArmed) ? Mathf.Rad2Deg : 0;
+            float _targetRotation = Mathf.Atan2(side, forward) * rot + _camera.transform.eulerAngles.y;
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, 0.1f);
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
-        else { _currentSpeed = 0; _anim.SetBool(IsMovingID, false); _anim.SetFloat("Velocity", 0, 0.9f, Time.deltaTime); }
+        else { _currentSpeed = 0; _anim.SetBool(IsMovingID, false); _anim.SetFloat(Velocity, 0, 0.9f, Time.deltaTime); }
 
         float multiplySpeed = (IsGrounded ? 10 : _airControl) * sprintMultiply;
 
         _rb.AddForce(direction * _currentSpeed * multiplySpeed * Time.deltaTime, ForceMode.Force);
-
-        float _targetRotation = Mathf.Atan2(side, forward) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y;
-        float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, 0.1f);
-        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
     }
     void CameraRotation()
     {
@@ -111,7 +121,20 @@ public class PlayerController : MonoBehaviour
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
         _camera.rotation = Quaternion.Euler(pitch, yaw, 0);
     }
-
+    void EquipWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            if (_anim.GetBool(IsArmed))
+            {
+                _anim.SetBool(IsArmed, false);
+            }
+            else
+            {
+                _anim.SetBool(IsArmed, true);
+            }
+        }
+    }
     private void OnApplicationFocus(bool focus)
     {
         if (focus)
