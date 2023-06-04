@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInteract : MonoBehaviour
 {
     // distanza da settare
-    public float distance = 3f;
+    [SerializeField] float distance = 3.5f;
     [SerializeField] LayerMask mask;
 
     UIPlayer playerUI;
@@ -25,6 +25,7 @@ public class PlayerInteract : MonoBehaviour
         RaycastHit hitInfo;
 
         // evitare di fare questo check ogni frame?
+
         if (Physics.Raycast(ray, out hitInfo, distance, mask))
         {
             if (hitInfo.collider.GetComponent<Interactable>() != null)
