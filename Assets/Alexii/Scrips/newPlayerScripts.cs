@@ -20,7 +20,7 @@ public class newPlayerScripts : MonoBehaviour
     private Transform cameraTransform;
 
     private Animator animator;
-    private CharacterController characterController;
+    public CharacterController characterController;
     private float ySpeed;
     private float originalStepOffset;
     private float? lastGroundedTime;
