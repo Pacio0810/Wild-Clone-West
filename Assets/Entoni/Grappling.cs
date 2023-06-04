@@ -1,23 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 
 public class Grappling : MonoBehaviour
 {
     public Vector3 lastGrappled;
-    public newPlayerScripts player;
     public LayerMask grappable;
     public LineRenderer cable;
     public float maxDistanceGrapple;
     public bool IsGrappling;
+    private PlayerController playerController;
     // Start is called before the first frame update
     void Start()
     {
         cable = GetComponent<LineRenderer>();
         cable.enabled = false;
-        player = GetComponentInParent<newPlayerScripts>();
+        playerController = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
