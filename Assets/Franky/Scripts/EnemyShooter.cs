@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyShooter : EnemyBase
 {
-    // Special
+    // Temporary
     public GameObject projectile;
     public Transform muzzle;
     public float timeBetweenAttacks;
