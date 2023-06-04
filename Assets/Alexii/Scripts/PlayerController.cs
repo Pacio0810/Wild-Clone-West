@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _checkRadius;
     [SerializeField] private float _airControl;
     private float _rotationVelocity;
+    private int sprintMultiply;
 
     [Header("Animation")]
     private Animator _anim;
@@ -78,20 +79,23 @@ public class PlayerController : MonoBehaviour
     }
     void Move()
     {
-        float side = Input.GetAxis("Horizontal");
-        float forward = Input.GetAxis("Vertical");
+        float side = InputSystem.self.LocalAxisMove.x;
+        float forward = InputSystem.self.LocalAxisMove.y;
 
         Vector3 direction = side * _camera.right + forward * _camera.forward;
         direction.y = 0;
 
         if (direction != Vector3.zero)
         {
+            sprintMultiply = InputSystem.self.Sprint ? 2 : 1;
+
             _currentSpeed = Mathf.Lerp(_currentSpeed, _MaxWalkSpeed, _lerpSpeed * Time.deltaTime);
             _anim.SetBool(IsMovingID, true);
+            _anim.SetFloat("Velocity", sprintMultiply,0.3f,Time.deltaTime);
         }
-        else { _currentSpeed = 0; _anim.SetBool(IsMovingID, false); }
+        else { _currentSpeed = 0; _anim.SetBool(IsMovingID, false); _anim.SetFloat("Velocity", 0, 0.9f, Time.deltaTime); }
 
-        float multiplySpeed = IsGrounded ? 10 : _airControl;
+        float multiplySpeed = (IsGrounded ? 10 : _airControl) * sprintMultiply;
 
         _rb.AddForce(direction * _currentSpeed * multiplySpeed * Time.deltaTime, ForceMode.Force);
 

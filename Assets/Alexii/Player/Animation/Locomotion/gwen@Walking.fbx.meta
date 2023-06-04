@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f8770eaa924707a4cb7771f2d3b55661
+guid: 03a21f57241609841828f8142cb4250c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Unarmed_Idle
+      name: Walking
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 300
+      lastFrame: 31
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -890,7 +890,8 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: d5b2ccc7e8ba6af45ac6c0b7fc44ff55, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: d5b2ccc7e8ba6af45ac6c0b7fc44ff55,
+    type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
