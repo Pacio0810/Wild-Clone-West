@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 9025514222493325540}
   - component: {fileID: 566390701343245916}
   - component: {fileID: 8646625271080467406}
+  - component: {fileID: 7155107409370942848}
+  - component: {fileID: 5135772904610761198}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -188,6 +190,7 @@ MonoBehaviour:
   maxPitch: 60
   minPitch: -30
   sensivity: 30
+  isGrappling: 0
 --- !u!114 &8646625271080467406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,13 +203,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068b0f660e713504d915acd76e98560f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastGrappled: {x: 0, y: 0, z: 0}
-  grappable:
+  cam: {fileID: 0}
+  gunTip: {fileID: 0}
+  grapplingCd: 0
+  distance: 0
+  grappleDelayTime: 0
+  trajectory: 0
+  grapplableMask:
     serializedVersion: 2
     m_Bits: 0
   cable: {fileID: 0}
-  maxDistanceGrapple: 0
-  IsGrappling: 0
+--- !u!114 &7155107409370942848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152940692323069140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286a1a3cbea48d24d9bef3f745edc7a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 3.5
+  mask:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!114 &5135772904610761198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152940692323069140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de534384f171034fb91b94d8c1625d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactText: {fileID: 0}
 --- !u!1 &417215010910920163
 GameObject:
   m_ObjectHideFlags: 0
