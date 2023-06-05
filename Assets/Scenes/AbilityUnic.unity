@@ -600,7 +600,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200647392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.49, z: 8.8}
+  m_LocalPosition: {x: 0, y: 5.14, z: 8.8}
   m_LocalScale: {x: 17, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -702,6 +702,11 @@ PrefabInstance:
       objectReference: {fileID: 370447943}
     - target: {fileID: 8646625271080467406, guid: faaa15df0baca6f4a9d7429a4d9fecfe,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646625271080467406, guid: faaa15df0baca6f4a9d7429a4d9fecfe,
+        type: 3}
       propertyPath: grapplingCd
       value: 1
       objectReference: {fileID: 0}
@@ -720,7 +725,8 @@ PrefabInstance:
       propertyPath: grapplableMask.m_Bits
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8646625271080467406, guid: faaa15df0baca6f4a9d7429a4d9fecfe, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1732729748979687199, guid: faaa15df0baca6f4a9d7429a4d9fecfe,
