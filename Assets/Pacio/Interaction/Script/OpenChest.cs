@@ -6,10 +6,12 @@ public class OpenChest : Interactable
 {
     public bool IsLocked;
     MeshRenderer meshRenderer;
+    string defaultMessage = "Open Chest [E]";
 
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        message = defaultMessage;
     }
     protected override void Interact()
     {
@@ -20,6 +22,7 @@ public class OpenChest : Interactable
         else
         {
             message = "It's Locked";
+            StartCoroutine(Coroutine());
         }
     }
 
@@ -28,5 +31,13 @@ public class OpenChest : Interactable
         // play animation
 
         meshRenderer.material.color = Color.green;
+        enabled = false;
     }
+
+    IEnumerator Coroutine()
+    {
+        yield return new WaitForSeconds(1);
+        message = defaultMessage;
+    }
+
 }

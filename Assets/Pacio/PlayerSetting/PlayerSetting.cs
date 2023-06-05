@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerSetting : MonoBehaviour
 {
     float maxHealth = 100;
-    float health = 50;
+    [SerializeField]float health = 50;
 
     float maxAmmo = 160;
     float ammo = 20;

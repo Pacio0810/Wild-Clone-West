@@ -4,12 +4,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class PowerUp : MonoBehaviour
+public class PowerUp : Interactable
 {
     BoxCollider box;
     MeshRenderer meshRenderer;
-
-    [SerializeField] protected float value;
+    protected float value;
     // Start is called before the first frame update
     void Start()
     {

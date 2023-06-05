@@ -8,10 +8,10 @@ using static UnityEngine.Rendering.DebugUI;
 public class HealthPowerUp : PowerUp
 {
     [SerializeField] VisualEffect HealthVfx;
-
     private void Awake()
     {
         value = 10;
+        message = "Pick Up Health";
     }
 
     protected override void PowerUpFunction(Collider player)

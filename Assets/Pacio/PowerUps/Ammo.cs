@@ -8,6 +8,7 @@ public class Ammo : PowerUp
     void Awake()
     {
         value = 20;
+        message = "Pick Up Ammo";
     }
 
     protected override void PowerUpFunction(Collider player)
