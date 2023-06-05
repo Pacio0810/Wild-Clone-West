@@ -27,7 +27,7 @@ public class PowerUp : MonoBehaviour
 
     protected virtual void PowerUpFunction(Collider player)
     {
-        box.enabled = false;
-        meshRenderer.enabled = false;
+        //box.enabled = false;
+        //meshRenderer.enabled = false;
     } 
 }

@@ -8,6 +8,7 @@ using static UnityEngine.Rendering.DebugUI;
 public class HealthPowerUp : PowerUp
 {
     [SerializeField] VisualEffect HealthVfx;
+
     private void Awake()
     {
         value = 10;
@@ -18,5 +19,6 @@ public class HealthPowerUp : PowerUp
         player.GetComponent<PlayerSetting>().AddHealth(value);
         HealthVfx.Play();
         base.PowerUpFunction(player);
+
     }
 }
