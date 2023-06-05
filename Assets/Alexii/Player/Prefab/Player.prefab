@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 1868215474322753687}
   - component: {fileID: 9025514222493325540}
   - component: {fileID: 566390701343245916}
-  - component: {fileID: 8646625271080467406}
   - component: {fileID: 7155107409370942848}
   - component: {fileID: 5135772904610761198}
   m_Layer: 0
@@ -74,7 +73,7 @@ Transform:
   - {fileID: 4482748754590393254}
   - {fileID: 8305456840759398039}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6578647333349912040
 Animator:
@@ -191,28 +190,6 @@ MonoBehaviour:
   minPitch: -30
   sensivity: 30
   isGrappling: 0
---- !u!114 &8646625271080467406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 152940692323069140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 068b0f660e713504d915acd76e98560f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  gunTip: {fileID: 0}
-  grapplingCd: 0
-  distance: 0
-  grappleDelayTime: 0
-  trajectory: 0
-  grapplableMask:
-    serializedVersion: 2
-    m_Bits: 0
-  cable: {fileID: 0}
 --- !u!114 &7155107409370942848
 MonoBehaviour:
   m_ObjectHideFlags: 0
