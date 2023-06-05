@@ -9,11 +9,13 @@ public class PowerUp : Interactable
     BoxCollider box;
     MeshRenderer meshRenderer;
     protected float value;
+
     // Start is called before the first frame update
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         box = GetComponent<BoxCollider>();
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -24,9 +26,11 @@ public class PowerUp : Interactable
         }
     }
 
+    
+
     protected virtual void PowerUpFunction(Collider player)
     {
-        //box.enabled = false;
-        //meshRenderer.enabled = false;
-    } 
+        box.enabled = false;
+        meshRenderer.enabled = false;
+    }
 }

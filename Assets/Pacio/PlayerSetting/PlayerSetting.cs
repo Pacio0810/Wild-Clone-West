@@ -10,7 +10,7 @@ public class PlayerSetting : MonoBehaviour
     [SerializeField]float health = 50;
 
     float maxAmmo = 160;
-    float ammo = 20;
+    [SerializeField]float ammo = 20;
     float curveValue = 0;
     [SerializeField] float curveTimer;
 

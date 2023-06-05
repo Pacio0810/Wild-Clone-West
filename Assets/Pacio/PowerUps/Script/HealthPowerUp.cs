@@ -19,6 +19,5 @@ public class HealthPowerUp : PowerUp
         player.GetComponent<PlayerSetting>().AddHealth(value);
         HealthVfx.Play();
         base.PowerUpFunction(player);
-
     }
 }
