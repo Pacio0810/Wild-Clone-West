@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour
     private Animator _anim;
     [SerializeField] private bool IsGrounded;
     private int IsJumpingID, IsFallingID, IsMovingID, IsGroundedID, Velocity, Side, Forward, IsArmed;
+    [SerializeField] Transform targetPosition;
+    [SerializeField] Transform bone;
+    [SerializeField] Transform root;
+    private bool ShouldDOIK = true;
 
     [Header("Camera")]
     [SerializeField] private Transform _camera;
@@ -44,6 +48,7 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         Jump();
         EquipWeapon();
+        AimLock(1);
     }
     void Jump()
     {
@@ -62,6 +67,7 @@ public class PlayerController : MonoBehaviour
             _anim.SetBool(IsJumpingID, false);
             _anim.SetBool(IsFallingID, false);
             _rb.drag = 10;
+            ShouldDOIK = true;
         }
         else
         {
@@ -71,6 +77,7 @@ public class PlayerController : MonoBehaviour
                 _anim.SetBool(IsGroundedID, false);
                 _anim.SetBool(IsFallingID, true);
                 _rb.drag = 0;
+                ShouldDOIK = false;
             }
         }
     }
@@ -148,7 +155,6 @@ public class PlayerController : MonoBehaviour
             Cursor.visible = false;
         }
     }
-
     public Vector3 GrapplingJumpVelocity(Vector3 startPoint, Vector3 end, float trajectory)
     {
         float gravity = Physics.gravity.y;
@@ -160,5 +166,45 @@ public class PlayerController : MonoBehaviour
         Vector3 velocityXZ = dispXY / (Mathf.Sqrt(-2 * trajectory / gravity) + Mathf.Sqrt(2 * (displacementY - trajectory) / gravity));
 
         return velocityXZ - velocityY;
+    }
+    void AimLock(float weight)
+    {
+        Vector3 aimDirection = _anim.transform.forward;
+        Vector3 targetDirection = targetPosition.position - _anim.transform.position;
+        Quaternion aimToward = Quaternion.FromToRotation(aimDirection, targetDirection);
+        Quaternion blendedRotation = Quaternion.Slerp(Quaternion.identity, aimToward, weight);
+        bone.rotation = blendedRotation * bone.rotation;
+    }
+    private void LateUpdate()
+    {
+        AimLock(1);
+    }
+    void OnAnimatorIK()
+    {
+        if (ShouldDOIK)
+        {
+            Vector3 l_foot = _anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
+            Vector3 r_foot = _anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
+
+            l_foot = GetHitPoint(l_foot + Vector3.up, l_foot - Vector3.up * 5) + new Vector3(0, 0.15f, 0);
+            r_foot = GetHitPoint(r_foot + Vector3.up, r_foot - Vector3.up * 5) + new Vector3(0, 0.15f, 0);
+
+            root.localPosition = new Vector3(0, Mathf.Abs((l_foot.y - r_foot.y) * 0.5f), 0);
+
+            _anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, _anim.GetFloat("ik_foot_l_weight"));
+            _anim.SetIKPosition(AvatarIKGoal.LeftFoot, l_foot);
+
+            _anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, _anim.GetFloat("ik_foot_r_weight"));
+            _anim.SetIKPosition(AvatarIKGoal.RightFoot, r_foot); 
+        }
+    }
+    private Vector3 GetHitPoint(Vector3 start, Vector3 end)
+    {
+        RaycastHit hit;
+        if (Physics.Linecast(start, end, out hit))
+        {
+            return hit.point;
+        }
+        return Vector3.zero;
     }
 }
