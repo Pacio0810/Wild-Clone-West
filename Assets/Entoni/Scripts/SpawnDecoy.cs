@@ -13,6 +13,7 @@ public class SpawnDecoy : MonoBehaviour
     [SerializeField] bool spawned;
     [SerializeField] float decoyCD;
     [SerializeField] float decoyTimer = 10;
+    [SerializeField] LayerMask enemy;
 
 
     void Start()
@@ -32,6 +33,7 @@ public class SpawnDecoy : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q) && decoyCD <= 0)
         {
             GameObject dec = Instantiate(decoy, transform.position, Quaternion.identity);
+            Gizmos.DrawSphere(dec.transform.position, 4f);
             Destroy(dec, decoyDuration);
             decoyCD = decoyTimer;
         }
