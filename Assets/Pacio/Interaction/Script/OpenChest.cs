@@ -4,10 +4,29 @@ using UnityEngine;
 
 public class OpenChest : Interactable
 {
+    public bool IsLocked;
+    Material material;
+
+    private void Awake()
+    {
+        material = GetComponent<Material>();
+    }
     protected override void Interact()
     {
-        Debug.Log("Open");
+        if (IsLocked)
+        {
+            Open();
+        }
+        else
+        {
+            message = "It's Locked";
+        }
+    }
 
-        // animazioni e drop loot
+    public void Open()
+    {
+        // play animation
+
+        material.color = Color.green;
     }
 }

@@ -6,6 +6,7 @@ public class PickUpKey : Interactable
 {
     BoxCollider box;
     MeshRenderer meshRenderer;
+    [SerializeField]OpenChest Chest;
 
     private void Awake()
     {
@@ -16,6 +17,6 @@ public class PickUpKey : Interactable
     {
         box.enabled = false;
         meshRenderer.enabled = false;
-        // set di una variabile del player a true??
+        Chest.IsLocked = true;
     }
 }
