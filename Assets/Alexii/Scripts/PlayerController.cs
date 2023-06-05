@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         Jump();
         EquipWeapon();
-        AimLock(1);
     }
     void Jump()
     {
@@ -114,16 +113,17 @@ public class PlayerController : MonoBehaviour
             _anim.SetBool(IsMovingID, true);
             _anim.SetFloat(Velocity, sprintMultiply, 0.3f, Time.deltaTime);
 
-            float rot = !_anim.GetBool(IsArmed) ? Mathf.Rad2Deg : 0;
-            float _targetRotation = Mathf.Atan2(side, forward) * rot + _camera.transform.eulerAngles.y;
-            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, 0.1f);
-            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            
         }
         else { _currentSpeed = 0; _anim.SetBool(IsMovingID, false); _anim.SetFloat(Velocity, 0, 0.9f, Time.deltaTime); }
 
         float multiplySpeed = (IsGrounded ? 10 : _airControl) * sprintMultiply;
 
         _rb.AddForce(direction * _currentSpeed * multiplySpeed * Time.deltaTime, ForceMode.Force);
+        float rot = !_anim.GetBool(IsArmed) ? Mathf.Rad2Deg : 0;
+        float _targetRotation = Mathf.Atan2(side, forward) * rot + _camera.transform.eulerAngles.y;
+        float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, 0.1f);
+        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
     }
     void CameraRotation()
     {
@@ -169,6 +169,7 @@ public class PlayerController : MonoBehaviour
     }
     void AimLock(float weight)
     {
+        if (targetPosition == null || !_anim.GetBool(IsArmed)) return;
         Vector3 aimDirection = _anim.transform.forward;
         Vector3 targetDirection = targetPosition.position - _anim.transform.position;
         Quaternion aimToward = Quaternion.FromToRotation(aimDirection, targetDirection);
@@ -183,6 +184,7 @@ public class PlayerController : MonoBehaviour
     {
         if (ShouldDOIK)
         {
+            //footIK
             Vector3 l_foot = _anim.GetBoneTransform(HumanBodyBones.LeftFoot).position;
             Vector3 r_foot = _anim.GetBoneTransform(HumanBodyBones.RightFoot).position;
 
@@ -195,7 +197,21 @@ public class PlayerController : MonoBehaviour
             _anim.SetIKPosition(AvatarIKGoal.LeftFoot, l_foot);
 
             _anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, _anim.GetFloat("ik_foot_r_weight"));
-            _anim.SetIKPosition(AvatarIKGoal.RightFoot, r_foot); 
+            _anim.SetIKPosition(AvatarIKGoal.RightFoot, r_foot);
+
+            //LockAimIK
+            if (targetPosition != null && !_anim.GetBool(IsArmed))
+            {
+                _anim.SetLookAtWeight(1);
+                _anim.SetLookAtPosition(targetPosition.position);
+            }
+        }
+        else
+        {
+            _anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
+            _anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
+            _anim.SetLookAtWeight(0);
+
         }
     }
     private Vector3 GetHitPoint(Vector3 start, Vector3 end)

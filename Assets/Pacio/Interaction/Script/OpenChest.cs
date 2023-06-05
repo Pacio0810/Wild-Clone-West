@@ -5,11 +5,11 @@ using UnityEngine;
 public class OpenChest : Interactable
 {
     public bool IsLocked;
-    Material material;
+    MeshRenderer meshRenderer;
 
     private void Awake()
     {
-        material = GetComponent<Material>();
+        meshRenderer = GetComponent<MeshRenderer>();
     }
     protected override void Interact()
     {
@@ -27,6 +27,6 @@ public class OpenChest : Interactable
     {
         // play animation
 
-        material.color = Color.green;
+        meshRenderer.material.color = Color.green;
     }
 }
