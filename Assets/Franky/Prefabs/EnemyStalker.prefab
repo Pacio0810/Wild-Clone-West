@@ -154,6 +154,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   agent: {fileID: 0}
+  items:
+  - {fileID: 3902219896654476176, guid: 8484852b8d9a5fc4886d9cf33475c8dd, type: 3}
+  - {fileID: 3430635019535089868, guid: 6d0647f66a830fe459a939d3d30855aa, type: 3}
+  - {fileID: 8981322224469241384, guid: 6e87400f90473e64f9d8655b7c7f8e01, type: 3}
   targetPlayer: {fileID: 0}
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointSet: 0

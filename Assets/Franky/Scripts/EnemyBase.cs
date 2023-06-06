@@ -1,12 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class EnemyBase : MonoBehaviour
 {
     // Layers
     public LayerMask LayerNav, LayerTarget, LayerObstacle;
     public NavMeshAgent agent;
+
+    public List<GameObject> items;
 
     // Target
     public Transform targetPlayer;
@@ -30,7 +32,6 @@ public abstract class EnemyBase : MonoBehaviour
     public float viewAngle;
 
     [Header("Speed Params")]
-
     public float patrolSpeed;
     public float chaseSpeed;
     public float attackSpeed;
