@@ -11,15 +11,25 @@ public class EnemyShooter : EnemyBase
 
     private void Start()
     {
+        viewAngle = 120;
+        viewRadius = 20;
+        attackRange = 10;
+        walkPointRange = 20;
+
+        patrolSpeed = 5;
+        chaseSpeed = 10;
+        attackSpeed = chaseSpeed;
+        maxAcceleration = 12;
+        baseAcceleration = 8;
+
+        canAttack = true;
+
         stateMachine = new StateMachine();
         stateMachine.AddState(StateType.PATROL, new PatrolState(this));
         stateMachine.AddState(StateType.CHASE, new ChaseState(this));
         stateMachine.AddState(StateType.ATTACK, new AttackState(this));
 
         stateMachine.GoTo(StateType.PATROL);
-
-        viewAngle = 160;
-        canAttack = true;
     }
 
     private void Update()
@@ -46,9 +56,40 @@ public class EnemyShooter : EnemyBase
         }
     }
 
+    public override void SpawnItem()
+    {
+        // Spawn random ammo, gun , health
+    }
+
     private void ResetAttack()
     {
         canAttack = true;
+    }
+
+    public override void SetSpeed(StateType state)
+    {
+        switch (state)
+        {
+            case StateType.PATROL:
+
+                agent.speed = patrolSpeed;
+                agent.acceleration = baseAcceleration;
+
+                break;
+
+            case StateType.CHASE:
+
+                agent.speed = chaseSpeed;
+                agent.acceleration = maxAcceleration;
+
+                break;
+
+            case StateType.ATTACK:
+
+                agent.speed = attackSpeed;
+
+                break;
+        }
     }
 }
 

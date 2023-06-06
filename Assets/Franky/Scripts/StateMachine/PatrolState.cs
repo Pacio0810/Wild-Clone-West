@@ -14,6 +14,7 @@ public class PatrolState : State
         Debug.Log("PATROL");
 
         owner.SetViewState(StateType.PATROL);
+        owner.SetSpeed(StateType.PATROL);
     }
 
     public override void OnExit()

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class EnemyBase : MonoBehaviour
 {
@@ -22,11 +23,19 @@ public abstract class EnemyBase : MonoBehaviour
     public float walkPointRange;
 
     // Var
-    [Header("FOV Parameter")]
+    [Header("FOV Params")]
     public float viewRadius;
     public float attackRange;
     [Range(0, 360)]
     public float viewAngle;
+
+    [Header("Speed Params")]
+
+    public float patrolSpeed;
+    public float chaseSpeed;
+    public float attackSpeed;
+    public float baseAcceleration;
+    public float maxAcceleration;
 
     // Special
     public Material green, red, yellow;
@@ -91,21 +100,33 @@ public abstract class EnemyBase : MonoBehaviour
 
     public abstract void Attack();
 
+    public abstract void SpawnItem();
+
     public virtual void SetViewState(StateType state)
     {
         switch (state)
         {
             case StateType.PATROL:
+
                 meshRenderer.material = green;
+
                 break;
+
             case StateType.CHASE:
+
                 meshRenderer.material = yellow;
+
                 break;
+
             case StateType.ATTACK:
+
                 meshRenderer.material = red;
+
                 break;
         }
     }
+
+    public abstract void SetSpeed(StateType state);
 
     public virtual void TakeDamage(int damage)
     {
@@ -114,12 +135,14 @@ public abstract class EnemyBase : MonoBehaviour
         if (health < 0)
         {
             isDead = true;
-            Destroy();
+            DestroyEnemy();
         }
     }
 
-    protected virtual void Destroy()
+    public virtual void DestroyEnemy()
     {
+        SpawnItem();
+
         Destroy(gameObject);
     }
 }

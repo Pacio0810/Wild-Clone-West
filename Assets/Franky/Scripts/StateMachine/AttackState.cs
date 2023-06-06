@@ -14,6 +14,8 @@ public class AttackState : State
         Debug.Log("ATTACK");
 
         owner.SetViewState(StateType.ATTACK);
+        owner.SetSpeed(StateType.ATTACK);
+
     }
 
     public override void OnExit()

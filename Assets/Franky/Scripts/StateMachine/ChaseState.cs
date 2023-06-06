@@ -14,6 +14,7 @@ public class ChaseState : State
         Debug.Log("CHASE");
 
         owner.SetViewState(StateType.CHASE);
+        owner.SetSpeed(StateType.CHASE);
     }
 
     public override void OnExit()
@@ -34,6 +35,7 @@ public class ChaseState : State
         else
         {
             owner.agent.SetDestination(owner.targetPlayer.position);
+            owner.transform.LookAt(owner.targetPlayer);
         }
     }
 }
